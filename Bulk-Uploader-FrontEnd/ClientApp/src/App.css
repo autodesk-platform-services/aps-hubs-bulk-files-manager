@@ -1,0 +1,13 @@
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
+main {
+  padding: 1em;
+}
+
+code{
+  color: #e22bca;
+  white-space: pre-wrap;
+}
