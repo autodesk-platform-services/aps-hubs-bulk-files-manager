@@ -77,4 +77,5 @@ Please see the [LICENSE](LICENSE) file for more details.
 
 # Written by
 - Jayakrishna K [@JKAdskHub](https://github.com/JKAdskHub), [Autodesk Partner Development](http://aps.autodesk.com)
+- Contributors:Daniel Clayson, Riley Peterson, Robert Angus and Tim Burnham 
 - Based on the original sample `CloudAPISample` under Revit SDK 2023 by Will Gu, Software Developer, Autodesk.
