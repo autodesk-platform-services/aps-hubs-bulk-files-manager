@@ -48,7 +48,7 @@ This application can be a product level tool for users to batch uploading/downlo
 
     ``git clone https://github.com/autodesk-platform-services/aps-hubs-bulk-files-manager.git``
 
-2. Build the publish version of this application by the following commandline in the root solution folder (same folder of `bulk-file-manager.sln`). This will install required packages automatically and build distributable application at: \Bulk-Uploader-FrontEnd\bin\Debug\net6.0-windows\win-x64\publish\
+2. Build the publish version of this application by the following commandline in the root solution folder (same folder of `bulk-file-manager.sln`). This will install required packages automatically and build distributable application at: \aps-hubs-bulk-files-manager\bin\Debug\net8.0-windows\win-x64\publish\
 
     ``dotnet publish -r win-x64``  
 
