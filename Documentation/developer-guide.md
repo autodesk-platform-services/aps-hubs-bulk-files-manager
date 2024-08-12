@@ -39,6 +39,9 @@ This application uses Entity Framework. If you make any changes to the data stru
 
   `dotnet ef migrations add NameOfYourMigrationHere --project "..\ApsSettings.Data\ApsSettings.Data.csproj"`
 
+## Additional Notes
+  - In debugging mode, the `flower icon` on the bottom right corner will show up. It is the console that tracks the logs of each HTTP traffic. 
+
 ## Building
 To build the application for a windows machine, use dotnet publish -r win-x64 while in the root solution folder.
 

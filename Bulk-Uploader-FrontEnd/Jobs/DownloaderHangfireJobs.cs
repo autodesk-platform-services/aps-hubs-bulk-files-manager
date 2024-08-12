@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Text.RegularExpressions;
 using System.Web;
 using Ac.Net.Authentication;
 using ApsSettings.Data;
@@ -113,9 +114,10 @@ public class DownloaderHangfireJobs
             await _dataContext.SaveChangesAsync();
 
             var token = await JointTokenManager.GetToken();
-            var bucketKey = HttpUtility.UrlEncode("wip.dm.prod");
-            var objectName = HttpUtility.UrlEncode(file.ObjectId.Split('/').Last());
-            
+            Regex rg = new Regex("^urn:adsk\\.objects:os\\.object:([-_.a-z0-9]{3,128})\\/(.+)$");
+            var matches = rg.Matches(file.ObjectId);
+            string bucketKey = matches[0].Groups[1].Value;
+            string objectName = matches[0].Groups[2].Value;
             var downloadUrl = await APSHelpers.GetDownloadUrl(token, bucketKey, objectName);
 
             await downloadUrl.DownloadFileAsync(Path.GetDirectoryName(file.DestinationFilePath), file.FileName);

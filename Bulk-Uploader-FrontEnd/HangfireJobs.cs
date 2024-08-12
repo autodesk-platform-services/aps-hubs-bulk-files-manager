@@ -10,6 +10,7 @@ using System.Net;
 using Ac.Net.Authentication;
 using Bulk_Uploader_Electron.Helpers;
 using Flurl.Http;
+using System.Text.RegularExpressions;
 
 namespace mass_upload_via_s3_csharp;
 
@@ -186,8 +187,15 @@ public class HangfireJobs
             Path.GetDirectoryName(filePath.Replace(bulkUpload.LocalPath, "")),
             filePath
         )).ToList();
-        await _context.BulkUploadFiles.AddRangeAsync(bulkUploadFiles);
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.BulkUploadFiles.AddRangeAsync(bulkUploadFiles);
+            await _context.SaveChangesAsync();
+        }catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+        
 
 
         foreach (var file in bulkUploadFiles)
@@ -383,7 +391,12 @@ public class HangfireJobs
         {
             //Create storage location
             var storageLocation = await APSHelpers.CreateStorageLocation(bulkUpload.ProjectId, bulkUploadFile.TargetFileName, bulkUpload.FolderId);
-            bulkUploadFile.ObjectId = storageLocation.Data.Id.Replace("urn:adsk.objects:os.object:wip.dm.prod/", "");
+            Regex rg = new Regex("^urn:adsk\\.objects:os\\.object:([-_.a-z0-9]{3,128})\\/(.+)$");
+            var matches = rg.Matches(storageLocation.Data.Id);
+            string bucketKey = matches[0].Groups[1].Value;
+            string objectKey = matches[0].Groups[2].Value;
+            bulkUploadFile.BucketKey = bucketKey;
+            bulkUploadFile.ObjectId = objectKey;
             _context.BulkUploadFiles.Update(bulkUploadFile);
             await _context.SaveChangesAsync();
 
@@ -427,7 +440,7 @@ public class HangfireJobs
                             int partInt = Convert.ToInt32(part);
 
                             int partsUploadInt = Convert.ToInt32(partsUploaded) + 1;
-                            var uploadParams = await APSHelpers.GetUploadUrls("wip.dm.prod", bulkUploadFile.ObjectId, 60, partInt, partsUploadInt, uploadKey);
+                            var uploadParams = await APSHelpers.GetUploadUrls(bulkUploadFile.BucketKey, bulkUploadFile.ObjectId, 60, partInt, partsUploadInt, uploadKey);
                             uploadKey = uploadParams.UploadKey;
                             uploadUrls = uploadParams.Urls;
                         }
@@ -474,7 +487,7 @@ public class HangfireJobs
                 }
             }
 
-            _ = await APSHelpers.CompleteUpload("wip.dm.prod", bulkUploadFile.ObjectId, uploadKey);
+            _ = await APSHelpers.CompleteUpload(bulkUploadFile.BucketKey, bulkUploadFile.ObjectId, uploadKey);
 
             //Create Version or Update Version
             if (string.IsNullOrWhiteSpace(bulkUploadFile.ItemId))
@@ -482,7 +495,7 @@ public class HangfireJobs
                 try
                 {
                     var version = await APSHelpers.CreateFirstVersion(bulkUpload.ProjectId,
-                        bulkUploadFile.TargetFileName, bulkUploadFile.FolderUrn, bulkUploadFile.ObjectId);
+                        bulkUploadFile.TargetFileName, bulkUploadFile.FolderUrn, bulkUploadFile.BucketKey, bulkUploadFile.ObjectId);
                     bulkUploadFile.VersionId = version.Data.Id;
                     bulkUploadFile.WebUrl = version.Links.Self.Href;  // Issue with the new SDK: missing -> version.Link.WebView.Href
                 }
@@ -503,7 +516,7 @@ public class HangfireJobs
             else
             {
                 var version = await APSHelpers.CreateNextVersion(bulkUpload.ProjectId, bulkUploadFile.TargetFileName,
-                    bulkUploadFile.ItemId, bulkUploadFile.ObjectId);
+                    bulkUploadFile.ItemId, bulkUploadFile.BucketKey, bulkUploadFile.ObjectId);
                 bulkUploadFile.VersionId = version.Data.Id;
                 bulkUploadFile.WebUrl = version.Links.Self.Href;  // Issue with the new SDK: missing -> version.Link.WebView.Href
             }

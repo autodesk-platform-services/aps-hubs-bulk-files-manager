@@ -260,6 +260,10 @@ namespace ApsSettings.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("BucketKey")
+                       .IsRequired()
+                       .HasColumnType("TEXT");
+
                     b.Property<string>("ObjectId")
                         .IsRequired()
                         .HasColumnType("TEXT");

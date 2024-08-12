@@ -176,6 +176,7 @@ namespace ApsSettings.Data.Migrations
                     FolderUrn = table.Column<string>(type: "TEXT", nullable: false),
                     FolderUrl = table.Column<string>(type: "TEXT", nullable: false),
                     ItemId = table.Column<string>(type: "TEXT", nullable: false),
+                    BucketKey = table.Column<string>(type: "TEXT", nullable: false),
                     ObjectId = table.Column<string>(type: "TEXT", nullable: false),
                     VersionId = table.Column<string>(type: "TEXT", nullable: false),
                     WebUrl = table.Column<string>(type: "TEXT", nullable: false),

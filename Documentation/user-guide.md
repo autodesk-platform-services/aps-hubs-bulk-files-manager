@@ -94,9 +94,8 @@ Note: BIM360 Teams supports User-based (3 Legged) only.
 
   ## Additional Options
 
-- By `Advanced Filters` when Create Upload, you may select files types to exclude, folder names to exclude, or write custom Javascript to determine which files should be uploaded or downloaded.
-- Settings >> `Hangfire` provides the dashboard on the jobs of uploads and downloads.
-- Settings >> `Utilities` allows you to dump available hubs(accounts), projects, folders etc. to excel file.
-- The `flower icon` on the bottom right corner is the console that tracks the logs of each HTTP traffic. 
-5. To restart a failed upload, select the files you with to repeat and press `Retry Selected`
-6. To view the details of a bulk upload, click the row of the Bulk Upload you wish to view.
+  - By `Advanced Filters` when Create Upload, you may select files types to exclude, folder names to exclude, or write custom Javascript to determine which files should be uploaded or downloaded.
+  - Settings >> `Hangfire` provides the dashboard on the jobs of uploads and downloads.
+  - Settings >> `Utilities` allows you to dump available hubs(accounts), projects, folders etc. to excel file.
+  - To restart a failed upload, select the files you with to repeat and press `Retry Selected`
+  - To view the details of a bulk upload, click the row of the Bulk Upload you wish to view.

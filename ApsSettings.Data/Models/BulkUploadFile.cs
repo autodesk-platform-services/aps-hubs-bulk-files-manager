@@ -17,6 +17,7 @@ namespace ApsSettings.Data.Models
         public string FolderUrn { get; set; } = "";
         public string FolderUrl { get; set; } = "";
         public string ItemId { get; set; } = "";
+        public string BucketKey { get; set; } = ""; 
         public string ObjectId { get; set; } = "";
         public string VersionId { get; set; } = "";
         public string WebUrl { get; set; } = "";

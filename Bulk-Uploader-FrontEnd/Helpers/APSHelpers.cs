@@ -2,6 +2,7 @@
 using Bulk_Uploader_Electron.Managers;
 using Flurl.Http;
 using Serilog;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace Bulk_Uploader_Electron.Utilities
@@ -313,7 +314,7 @@ namespace Bulk_Uploader_Electron.Utilities
 
 
         #region Items
-        public static async Task<Autodesk.DataManagement.Model.Item> CreateFirstVersion(string projectId, string fileName, string folderId, string objectId)
+        public static async Task<Autodesk.DataManagement.Model.Item> CreateFirstVersion(string projectId, string fileName, string folderId, string bucketKey,string objectId)
         {
             try
             {
@@ -376,7 +377,7 @@ namespace Bulk_Uploader_Electron.Utilities
                                     Data = new()
                                     {
                                         Type = Autodesk.DataManagement.Model.Type.Objects,
-                                        Id = $"urn:adsk.objects:os.object:wip.dm.prod/{objectId}"
+                                        Id = $"urn:adsk.objects:os.object:{bucketKey}/{objectId}"
                                     }
                                 }
                             }
@@ -400,7 +401,7 @@ namespace Bulk_Uploader_Electron.Utilities
 
 
         #region Versions
-        public static async Task<Autodesk.DataManagement.Model.ModelVersion> CreateNextVersion(string projectId, string fileName, string itemId, string objectId)
+        public static async Task<Autodesk.DataManagement.Model.ModelVersion> CreateNextVersion(string projectId, string fileName, string itemId,string bucketKey, string objectId)
         {
             try
             {
@@ -437,7 +438,7 @@ namespace Bulk_Uploader_Electron.Utilities
                                 Data = new()
                                 {
                                     Type = Autodesk.DataManagement.Model.Type.Objects,
-                                    Id = $"urn:adsk.objects:os.object:wip.dm.prod/{objectId}"
+                                    Id = $"urn:adsk.objects:os.object:{bucketKey}/{objectId}"
                                 }
                             }
                         }
@@ -481,8 +482,10 @@ namespace Bulk_Uploader_Electron.Utilities
         {
             try
             {
-                var bucketKey = HttpUtility.UrlEncode("wip.dm.prod");
-                var objectName = HttpUtility.UrlEncode(storageUrn.Split('/').Last());
+                Regex rg = new Regex("^urn:adsk\\.objects:os\\.object:([-_.a-z0-9]{3,128})\\/(.+)$");
+                var matches = rg.Matches(storageUrn);
+                string bucketKey = matches[0].Groups[1].Value;
+                string objectName = matches[0].Groups[2].Value;
                 var downloadUrl = await GetDownloadUrl(token, bucketKey, objectName);
                 var response = await downloadUrl
                     .WithHeader("ConnectionClose", true)
