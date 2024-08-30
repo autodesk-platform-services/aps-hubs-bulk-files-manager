@@ -76,6 +76,11 @@ This sample is licensed under the terms of the [MIT License](http://opensource.o
 Please see the [LICENSE](LICENSE) file for more details.
 
 # Written by
-- Jayakrishna K [@JKAdskHub](https://github.com/JKAdskHub), [Autodesk Partner Development](http://aps.autodesk.com)
-- Contributors:Daniel Clayson, Riley Peterson, Robert Angus and Tim Burnham 
-- Based on the original sample `CloudAPISample` under Revit SDK 2023 by Will Gu, Software Developer, Autodesk.
+Based on the Bulk Upload Utility, by Autodesk Consulting:  
+  -  Developer/Architect: Daniel Clayson
+  -  Developer: Riley Peterson
+  -  Architect: Tim Burnham
+  -  Architect: Robert Angus
+    
+Open Source Maintainers
+  -  Jayakrishna K [@JKAdskHub](https://github.com/JKAdskHub)
