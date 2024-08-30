@@ -31,7 +31,7 @@ This application can be a product level tool for users to batch uploading/downlo
 </center>
 
 # Demo
-[![https://youtu.be/c9quBMX84NI?si=668sPPdk-mOID7B1](https://github.com/JKSampleOpensource/bulk-upload-migration-sdk/assets/165867680/161142da-2597-4d88-a526-f256653f1460)]
+[![https://youtu.be/c9quBMX84NI](http://img.youtube.com/vi/c9quBMX84NI/0.jpg)](https://youtu.be/c9quBMX84NI "APS Hubs Bulk Files Manager")
 
 ## Prerequisites
 - Knowledge of Data Management API of Autodesk Platform Services (APS)
