@@ -1,3 +1,28 @@
+# MGEN BulkHaul
+
+Desktop tool for bulk-uploading local folder trees into Autodesk Construction Cloud / Autodesk Docs (Forma) hubs, with job tracking, retry and progress reporting.
+
+> Based on [aps-hubs-bulk-files-manager](https://github.com/autodesk-platform-services/aps-hubs-bulk-files-manager) by Autodesk Platform Services, used under the MIT License (see `LICENSE`). This is a modified version maintained by Microgenesis CADSoft Ltd. It is not provided or endorsed by Autodesk.
+
+## Changes from upstream
+
+- Upload progress bar showing data uploaded of total (MB/GB)
+- File size column in every file list
+- "Reason / Logs" column shows the full log text in the status lists
+- Failed files can be renamed (hub-side name only) and retried
+- Fixed the "Retry selected files" button, which did nothing for selected rows
+
+## Known limitations
+
+- Folders that have no files anywhere beneath them are not created in the hub
+- No hash verification after upload
+- A dry run may upload files; test on a throwaway folder first
+- Files without an extension may be skipped when the exclusion fields are left empty; enter a placeholder value in both
+- The job queue is held in memory and is lost if the app is closed
+
+---
+
+## Original upstream README
 
 # APS Hubs Bulk File Manager
 

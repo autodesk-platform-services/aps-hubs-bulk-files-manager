@@ -56,6 +56,8 @@ namespace ApsSettings.Data.Models
         [NotMapped] public long PendingFileCount { get; set; }
         [NotMapped] public long SuccessFileCount { get; set; }
         [NotMapped] public long FailedFileCount { get; set; }
+        [NotMapped] public long TotalBytes { get; set; }
+        [NotMapped] public long UploadedBytes { get; set; }
 
         public void AddLogs(string log)
         {

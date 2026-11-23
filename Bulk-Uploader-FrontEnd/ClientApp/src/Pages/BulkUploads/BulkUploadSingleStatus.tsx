@@ -7,6 +7,8 @@ import {BulkUploadSingleHeader} from "./BulkUploadSingleHeader.tsx";
 import {SimpleDate} from "../../Components/SimpleDate.tsx";
 import Button from "@mui/material/Button";
 import {useBulkUploadStatus} from "../../Utilities/Hooks/useBulkUploadStatus.ts";
+import {SimplePatch} from "../../Utilities/SimpleREST.ts";
+import {formatSize} from "../../Utilities/formatSize.ts";
 
 export const BulkUploadSingleStatus = () => {
     const {bulkUploadId, status} = useParams() as { bulkUploadId: string, status: string };
@@ -28,16 +30,16 @@ export const BulkUploadSingleStatus = () => {
     // }, [bulkUpload, status])
 
     function restartFiles(){
-        if(!bulkUpload || !bulkUpload?.files?.length || !selected.length) return;
+        if(!bulkUpload || !selected.length) return;
         const confirmation = window.confirm("Are you sure you want to repeat the processing on these jobs? This may cause the file to be uploaded multiple times");
 
         if(confirmation){
-            const files = bulkUpload.files.filter(x=>selected.indexOf(x.id) > -1);
+            const files = selected.map(id => ({id, bulkUploadId: bulkUpload.id}));
             filesMutation.mutate({
                 command: 'repeatFiles',
                 bulkUploadId: bulkUpload.id,
                 files
-            })
+            }, {onSuccess: () => refreshStatus()})
         }
     }
 
@@ -45,14 +47,17 @@ export const BulkUploadSingleStatus = () => {
         {field: 'sourceFileName', sortable: false, headerName: "File Name", flex: 1, renderCell: ({row, value})=>(
                 <span title={row.versionId}>{value}</span>
             )},
+        {field: 'fileSize', sortable: false, headerName: "Size", width: 100, align: 'right', headerAlign: 'right', valueFormatter: ({value}) => formatSize(value)},
         {field: 'sourceRelativePath', sortable: false, headerName: "Path", flex: 1},
-        {field: 'targetFileName', sortable: false, headerName: "Target File Name", flex: 1, renderCell: ({row, value})=>(
+        {field: 'targetFileName', sortable: false, editable: true, headerName: "Target File Name", description: "Failed files: double-click to rename, then select the file and press Retry", flex: 1, renderCell: ({row, value})=>(
             row.webUrl ? <a href={row.webUrl}>{value}</a> : value
             )},
         {field: 'targetRelativePath', sortable: false, headerName: "Target Path", flex: 1},
         {field: 'folderUrn', sortable: false, headerName: "Cloud Folder", flex: 1},
         {field: 'status', sortable: false, headerName: "Status"},
-        {field: 'logs', sortable: false, headerName: "Logs", flex: 1},
+        {field: 'logs', sortable: false, headerName: "Reason / Logs", flex: 2, minWidth: 300, renderCell: ({value}) => (
+            <div style={{whiteSpace: 'pre-wrap', wordBreak: 'break-word', padding: '4px 0'}}>{value}</div>
+        )},
         {field: 'createdOn', sortable: false, headerName: "Created On", renderCell: ({value})=>(<SimpleDate date={value}/>)},
         {field: 'lastModified', sortable: false, headerName: "Last Modified", renderCell: ({value})=>(<SimpleDate date={value}/>)},
     ]
@@ -73,12 +78,13 @@ export const BulkUploadSingleStatus = () => {
             <BulkUploadSingleHeader bulkUpload={bulkUpload} refresh={()=>{refresh(); refreshStatus(); }}/>
 
             <div style={{display: 'flex', gap: '1em', alignItems: 'center'}}>
-                <Button disabled={!selected.length} onClick={()=>restartFiles()} variant={'contained'} color={'success'}>Upload selected files</Button>
+                <Button disabled={!selected.length} onClick={()=>restartFiles()} variant={'contained'} color={'success'}>Retry selected files</Button>
                 <h3>{status}</h3>
             </div>
             <div>
                 <DataGrid
                     density={'compact'}
+                    getRowHeight={() => 'auto'}
                     rowCount={rowCount}
                     paginationMode={'server'}
                     paginationModel={paginationModel}
@@ -87,6 +93,12 @@ export const BulkUploadSingleStatus = () => {
                     rows={rows}
                     loading={isLoading || uploadIsLoading}
                     disableRowSelectionOnClick={true}
+                    isCellEditable={params => params.row.status === 'Failed'}
+                    processRowUpdate={async (newRow, oldRow) => {
+                        if (newRow.targetFileName === oldRow.targetFileName) return oldRow;
+                        return await SimplePatch<IBulkUploadFile>(`/api/bulkUploads/${bulkUploadId}/bulkUploadFiles/${newRow.id}`, {targetFileName: newRow.targetFileName});
+                    }}
+                    onProcessRowUpdateError={error => window.alert(error?.response?.data ?? error?.message ?? "Could not rename the file")}
                     checkboxSelection={true}
                     rowSelectionModel={selected}
                     onRowSelectionModelChange={rowSelectionModel=>setSelected(rowSelectionModel as number[])}

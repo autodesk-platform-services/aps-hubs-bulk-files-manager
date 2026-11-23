@@ -20,6 +20,8 @@ export interface IBulkUpload {
     pendingFileCount?: number;
     successFileCount?: number;
     failedFileCount?: number;
+    totalBytes?: number;
+    uploadedBytes?: number;
     files?: IBulkUploadFile[]
     autodeskMirrors?: IBulkUploadAutodeskMirror[]
 }
@@ -45,6 +47,7 @@ export interface IBulkUploadFile{
     versionId: string;
     status: string;
     logs: string;
+    fileSize?: number;
     createdOn: Date;
     lastModified: Date;
 }

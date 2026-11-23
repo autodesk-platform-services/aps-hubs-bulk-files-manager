@@ -28,10 +28,23 @@ namespace ApsSettings.Data.Models
         public string Logs { get; set; } = "";
         public DateTime CreatedOn { get; set; } = DateTime.Now;
         public DateTime LastModified { get; set; } = DateTime.Now;
+        public long? FileSize { get; set; }
         
         public void AddLogs(string log)
         {
             Logs += $"[{DateTime.Now.ToString()}] {log}\r\n";
+        }
+
+        private static long? GetFileSize(string path)
+        {
+            try
+            {
+                return new FileInfo(path).Length;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public static BulkUploadFile CreateFile(BulkUpload bulkUpload, string sourceFolderPath, string sourceFilePath)
@@ -44,6 +57,7 @@ namespace ApsSettings.Data.Models
                 SourceRelativePath = sourceFolderPath,
                 TargetRelativePath = sourceFolderPath,
                 TargetFileName = Path.GetFileName(sourceFilePath),
+                FileSize = GetFileSize(sourceFilePath),
                 Status = bulkUpload.Status == BulkUploadStatus.Preview ? JobFileStatus.Proposed : JobFileStatus.Pending
             };
 

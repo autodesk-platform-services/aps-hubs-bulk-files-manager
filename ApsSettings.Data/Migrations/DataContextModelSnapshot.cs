@@ -241,6 +241,9 @@ namespace ApsSettings.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("TEXT");
 
+                    b.Property<long?>("FileSize")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("FolderUrl")
                         .IsRequired()
                         .HasColumnType("TEXT");

@@ -85,6 +85,14 @@ public class BulkUploadController : ControllerBase
             .Where(x => x == JobFileStatus.Failed)
             .LongCount();
 
+        bulkUpload.TotalBytes = await DataContext.BulkUploadFiles
+            .Where(x => x.BulkUploadId == bulkUpload.Id && x.Status != JobFileStatus.DoNotUpload)
+            .SumAsync(x => x.FileSize ?? 0);
+        var uploadedBytes = await DataContext.BulkUploadFiles
+            .Where(x => x.BulkUploadId == bulkUpload.Id && x.Status == JobFileStatus.Success)
+            .SumAsync(x => x.FileSize ?? 0);
+        bulkUpload.UploadedBytes = Math.Min(bulkUpload.TotalBytes, uploadedBytes + UploadProgress.Bytes(bulkUpload.Id));
+
         return Ok(bulkUpload);
     }
     [HttpGet]
@@ -103,7 +111,8 @@ public class BulkUploadController : ControllerBase
             .Skip(skip)
             .Take(count)
             .ToListAsync();
-        
+
+
         return Ok(files);
     }
 
@@ -161,6 +170,28 @@ public class BulkUploadController : ControllerBase
         return Ok();
     }
 
+    [HttpPatch]
+    [Route("api/bulkUploads/{bulkUploadId}/bulkUploadFiles/{fileId}")]
+    public async Task<ActionResult> Rename(int bulkUploadId, int fileId, [FromBody] RenameFileRequest request)
+    {
+        var file = await DataContext.BulkUploadFiles
+            .FirstOrDefaultAsync(x => x.Id == fileId && x.BulkUploadId == bulkUploadId);
+
+        if (file == null) return NotFound();
+        if (file.Status != JobFileStatus.Failed) return BadRequest("Only failed files can be renamed");
+
+        var newName = request.TargetFileName?.Trim();
+        if (string.IsNullOrWhiteSpace(newName)) return BadRequest("File name cannot be empty");
+        if (newName.IndexOfAny(new[] {'\\', '/'}) >= 0) return BadRequest("File name cannot contain slashes");
+
+        file.AddLogs($"Renamed target file from '{file.TargetFileName}' to '{newName}'");
+        file.TargetFileName = newName;
+        file.LastModified = DateTime.Now;
+        await DataContext.SaveChangesAsync();
+
+        return Ok(file);
+    }
+
     [HttpDelete]
     [Route("api/bulkUploads/{id}")]
     public async Task<ActionResult> Delete(int id)
@@ -173,4 +204,9 @@ public class BulkUploadController : ControllerBase
         await DataContext.SaveChangesAsync();
         return Ok();
     }
+}
+
+public class RenameFileRequest
+{
+    public string TargetFileName { get; set; }
 }

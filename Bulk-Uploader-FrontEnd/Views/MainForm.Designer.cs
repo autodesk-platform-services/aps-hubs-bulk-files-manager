@@ -58,7 +58,7 @@ namespace Bulk_Uploader_Electron {
             this.ClientSize = new System.Drawing.Size(1280, 768);
             this.Controls.Add(this.webView21);
             this.Name = "MainForm";
-            this.Text = "Autodesk Bulk File Manager";
+            this.Text = "MGEN BulkHaul";
             this.ShowIcon = false;
             ((System.ComponentModel.ISupportInitialize)(this.webView21)).EndInit();
             this.ResumeLayout(false);

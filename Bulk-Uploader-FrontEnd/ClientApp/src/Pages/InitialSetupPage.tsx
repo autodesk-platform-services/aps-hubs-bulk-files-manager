@@ -49,7 +49,7 @@ export const InitialSetupPage = ()=>{
     const isSaveDisabled = (!clientId || !clientSecret);
 
     return (<div style={{padding: '2em'}}>
-    <h1>Autodesk Bulk File Manager</h1>
+    <h1>MGEN BulkHaul</h1>
 
         <Paper style={{padding: '1em', display: 'flex', flexDirection: 'column', gap: '1em'}}>
 

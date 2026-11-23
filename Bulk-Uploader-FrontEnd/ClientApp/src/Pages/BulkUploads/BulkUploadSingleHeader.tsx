@@ -4,6 +4,7 @@ import {ColoredStatusButton} from "../../Components/ColoredStatusButton.tsx";
 import IconButton from "@mui/material/IconButton";
 import SyncIcon from "@mui/icons-material/Sync";
 import {LinearProgress} from "@mui/material";
+import {formatSize} from "../../Utilities/formatSize.ts";
 
 export const BulkUploadSingleHeader = ({bulkUpload, refresh}: { bulkUpload?: IBulkUpload, refresh?: () => void }) => {
 
@@ -55,6 +56,18 @@ export const BulkUploadSingleHeader = ({bulkUpload, refresh}: { bulkUpload?: IBu
                     </IconButton>}
                 </div>
             </div> : <LinearProgress/>}
+            {bulkUpload && !!bulkUpload.totalBytes && (
+                <div style={{margin: '0.5em 0 1em'}}>
+                    <LinearProgress
+                        variant="determinate"
+                        value={Math.min(100, (bulkUpload.uploadedBytes ?? 0) / bulkUpload.totalBytes * 100)}
+                    />
+                    <small>
+                        {formatSize(bulkUpload.uploadedBytes ?? 0)} of {formatSize(bulkUpload.totalBytes)} uploaded
+                        ({Math.floor((bulkUpload.uploadedBytes ?? 0) / bulkUpload.totalBytes * 100)}%)
+                    </small>
+                </div>
+            )}
         </>
     )
 }

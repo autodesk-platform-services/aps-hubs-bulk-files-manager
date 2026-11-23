@@ -10,7 +10,7 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import {AutodeskIcon} from "../Images/AutodeskIcon.tsx";
+import {BulkHaulIcon} from "../Images/BulkHaulIcon.tsx";
 import {NavLink} from "react-router-dom";
 import SettingsIcon from '@mui/icons-material/Settings';
 
@@ -59,7 +59,7 @@ function ResponsiveAppBar() {
         <AppBar position="static">
             <Container maxWidth={false}>
                 <Toolbar disableGutters sx={{gap: '1em'}}>
-                    <AutodeskIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 1, fill: '#fff'}}/>
+                    <BulkHaulIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 1, fill: '#fff'}}/>
                     <Typography
                         variant="h6"
                         noWrap
@@ -75,7 +75,7 @@ function ResponsiveAppBar() {
                             textDecoration: 'none',
                         }}
                     >
-                        Bulk File Manager
+                        MGEN BulkHaul
                     </Typography>
 
                     <Box sx={{flexGrow: 1, display: {xs: 'flex', md: 'none'}}}>
@@ -115,7 +115,7 @@ function ResponsiveAppBar() {
                             ))}
                         </Menu>
                     </Box>
-                    <AutodeskIcon sx={{display: {xs: 'flex', md: 'none'}, mr: 1, fill: '#fff'}}/>
+                    <BulkHaulIcon sx={{display: {xs: 'flex', md: 'none'}, mr: 1, fill: '#fff'}}/>
                     <Typography
                         variant="h5"
                         noWrap
@@ -132,7 +132,7 @@ function ResponsiveAppBar() {
                             textDecoration: 'none',
                         }}
                     >
-                        Bulk File Manager
+                        MGEN BulkHaul
                     </Typography>
                     <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
                         {pages.map((page) => (

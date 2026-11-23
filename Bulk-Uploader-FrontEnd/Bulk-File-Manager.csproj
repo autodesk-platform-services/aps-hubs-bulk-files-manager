@@ -8,7 +8,7 @@
     <PublishSingleFile>true</PublishSingleFile>
     <Nullable>enable</Nullable>
     <RootNamespace>Bulk_Uploader_Electron</RootNamespace>
-    <ApplicationIcon>Resources\autodesk_icon.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\mgen_bulkhaul.ico</ApplicationIcon>
     <SpaRoot>ClientApp\</SpaRoot>
     <SpaProxyServerUrl>https://localhost:3000</SpaProxyServerUrl>
     <SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>

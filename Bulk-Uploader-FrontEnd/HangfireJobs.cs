@@ -484,6 +484,7 @@ public class HangfireJobs
                     Console.WriteLine(
                         $"{partsUploaded.ToString()} of {numberOfChunks.ToString()} parts uploaded for {bulkUploadFile.SourceAbsolutePath} ");
                     start = end;
+                    UploadProgress.Set(bulkUploadId, bulkUploadFileId, end);
                 }
             }
 
@@ -535,6 +536,10 @@ public class HangfireJobs
             Log.Error("Reason: " + e.Message);
             Log.Information("Stack: " + e.StackTrace);
             throw;
+        }
+        finally
+        {
+            UploadProgress.Remove(bulkUploadFileId);
         }
     }
 
